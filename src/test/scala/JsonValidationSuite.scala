@@ -3,4 +3,5 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class JsonValidationSuite
-extends JsonValidationTest
+  extends JsonValidationTest
+  with JsonCleanTest

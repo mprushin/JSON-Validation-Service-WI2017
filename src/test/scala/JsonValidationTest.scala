@@ -1,6 +1,6 @@
 import org.scalatest.FunSuite
 
-trait JsonValidationTest extends FunSuite{
+trait JsonValidationTest extends FunSuite {
 
   val schemaJsonString =
     """
@@ -57,14 +57,19 @@ trait JsonValidationTest extends FunSuite{
       |}
     """.stripMargin
 
-  test("validate success"){
+  test("validate success") {
     val validation = new JsonValidation()
-    assert(validation.validate(correctJsonString, schemaJsonString))
+    assert(validation.validate(correctJsonString, schemaJsonString)._1)
   }
 
-  test("validate error"){
+  test("validate error") {
     val validation = new JsonValidation()
-    assert(!validation.validate(incorrectJsonString, schemaJsonString))
+    assert(!validation.validate(incorrectJsonString, schemaJsonString)._1)
+  }
+
+  test("validate error message") {
+    val validation = new JsonValidation()
+    assert(!validation.validate(incorrectJsonString, schemaJsonString)._2.isEmpty)
   }
 
 }

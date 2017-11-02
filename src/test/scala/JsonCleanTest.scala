@@ -30,4 +30,5 @@ trait JsonCleanTest extends FunSuite {
     val jsonStringWithoutNullsPretty = jsonClean.loadJson(jsonStringWithoutNulls).pretty(Printer.spaces2)
     assert(jsonClean.removeNullValues(jsonStringWithNulls) == jsonStringWithoutNullsPretty)
   }
+
 }

@@ -7,7 +7,10 @@ class JsonValidation {
   val factory: JsonSchemaFactory = JsonSchemaFactory.byDefault()
 
   def validate(jsonString: String, schemaString: String): Boolean = {
-    return ???
+    val json = objectMapper.readTree(jsonString)
+    val schemaJson = objectMapper.readTree(schemaString)
+    val schema = factory.getJsonSchema(schemaJson)
+    schema.validInstance(json)
   }
 
 

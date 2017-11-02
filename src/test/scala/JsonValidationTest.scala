@@ -43,7 +43,7 @@ trait JsonValidationTest extends FunSuite{
       |	"source": "/home/alice/image.iso",
       |	"destination": "/mnt/storage",
       |	"chunks": {
-      |		"size": 1024,
+      |		"size": 1024
       |	}
       |}
     """.stripMargin
@@ -52,7 +52,7 @@ trait JsonValidationTest extends FunSuite{
     """
       |{
       |	"chunks": {
-      |		"size": 1024,
+      |		"size": 1024
       |	}
       |}
     """.stripMargin

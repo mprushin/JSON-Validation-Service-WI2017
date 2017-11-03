@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.fge.jsonschema.core.report.{ProcessingMessage, ProcessingReport}
 import com.github.fge.jsonschema.main.JsonSchemaFactory
 
-class JsonValidation {
+object JsonValidation {
 
   val objectMapper = new ObjectMapper
   val factory: JsonSchemaFactory = JsonSchemaFactory.byDefault()

@@ -58,18 +58,15 @@ trait JsonValidationTest extends FunSuite {
     """.stripMargin
 
   test("validate success") {
-    val validation = new JsonValidation()
-    assert(validation.validate(correctJsonString, schemaJsonString)._1)
+    assert(JsonValidation.validate(correctJsonString, schemaJsonString)._1)
   }
 
   test("validate error") {
-    val validation = new JsonValidation()
-    assert(!validation.validate(incorrectJsonString, schemaJsonString)._1)
+    assert(!JsonValidation.validate(incorrectJsonString, schemaJsonString)._1)
   }
 
   test("validate error message") {
-    val validation = new JsonValidation()
-    assert(!validation.validate(incorrectJsonString, schemaJsonString)._2.isEmpty)
+    assert(!JsonValidation.validate(incorrectJsonString, schemaJsonString)._2.isEmpty)
   }
 
 }

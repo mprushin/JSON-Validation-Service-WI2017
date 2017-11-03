@@ -1,35 +1,33 @@
 import JsonResponseModels.JsonOperationResponse
-import com.twitter.finagle.{Http, Service}
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finagle.param.Stats
+import com.twitter.finagle.{Http, Service}
 import com.twitter.server.TwitterServer
 import com.twitter.util.Await
-import io.finch._
+import io.circe.Json
 import io.circe.generic.auto._
+import io.finch._
 import io.finch.circe.dropNullValues._
 
 
 object Main extends TwitterServer {
 
-  val schemaGet: Endpoint[String] = get("schema" :: string) {
+  val schemaGet:Endpoint[Json] = get("schema" :: string) {
     (schemaId: String) => {
-      val storage = new JsonStorage
-      storage.getSchema(schemaId) match {
-        case Some(schemaString) => Ok(schemaString)
-        case None => Ok("No schema with id [%s]".format(schemaId))
+      JsonStorage.getSchema(schemaId) match {
+        case Some(schemaString) => Ok(JsonUtils.loadJson(schemaString))
+        case None => Ok(JsonUtils.loadJson("No schema with id [%s]".format(schemaId)))
       }
     }
   }
 
   val schemaPost: Endpoint[JsonOperationResponse] = post("schema" :: string :: stringBody) {
     (schemaId: String, jsonString: String) => {
-      val jsonClean = new JsonClean
-      if (!jsonClean.isCorrectJson(jsonString)) {
+      if (!JsonUtils.isCorrectJson(jsonString)) {
         Ok(JsonResponseModels.uploadError)
       }
       else {
-        val storage = new JsonStorage
-        storage.saveSchema(jsonString, schemaId)
+        JsonStorage.saveSchema(jsonString, schemaId)
         Ok(JsonResponseModels.uploadedSuccessfully)
       }
     }
@@ -37,18 +35,15 @@ object Main extends TwitterServer {
 
   val validatePost: Endpoint[JsonOperationResponse] = post("validate" :: string :: stringBody) {
     (schemaId: String, jsonString: String) => {
-      val jsonClean = new JsonClean
-      if (!jsonClean.isCorrectJson(jsonString)) {
+      if (!JsonUtils.isCorrectJson(jsonString)) {
         Ok(JsonResponseModels.validateError("Uploaded string isn't a correct JSON"))
       }
       else {
-        val jsonStorage = new JsonStorage
-        val jsonSchemaString = jsonStorage.getSchema(schemaId)
-        jsonStorage.getSchema(schemaId) match {
+        val jsonSchemaString = JsonStorage.getSchema(schemaId)
+        JsonStorage.getSchema(schemaId) match {
           case Some(schemaString) => {
-            val jsonValidation = new JsonValidation
-            val jsonStringCleaned = jsonClean.removeNullValues(jsonString)
-            val validationResult = jsonValidation.validate(jsonStringCleaned, schemaString)
+            val jsonStringCleaned = JsonUtils.removeNullValues(jsonString)
+            val validationResult = JsonValidation.validate(jsonStringCleaned, schemaString)
             if (validationResult._1) {
               Ok(JsonResponseModels.validatedSuccessfully)
             }
@@ -56,7 +51,7 @@ object Main extends TwitterServer {
               Ok(JsonResponseModels.validateError(validationResult._2))
             }
           }
-          case None => Ok(JsonResponseModels.validateError("No schema with id [%s]".format(schemaId)))
+          case None => Ok(JsonResponseModels.validateError("No schema with id [%s] exists.".format(schemaId)))
         }
       }
     }

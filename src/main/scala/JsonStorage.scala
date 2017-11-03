@@ -2,7 +2,7 @@ import java.io.{File, FileNotFoundException, PrintWriter}
 
 import scala.io.Source
 
-class JsonStorage {
+object JsonStorage {
   val storagePath = "C:\\SchemaStorage\\"
 
   def saveSchema(schemaString: String, schemaId: String): Unit = {

@@ -1,7 +1,7 @@
 import io.circe.Printer
 import org.scalatest.FunSuite
 
-trait JsonCleanTest extends FunSuite {
+trait JsonUtilsTest extends FunSuite {
   val jsonStringWithNulls =
     """
       |{
@@ -28,18 +28,15 @@ trait JsonCleanTest extends FunSuite {
   val notAJson = "dasdsadsadas"
 
   test("remove nulls") {
-    val jsonClean = new JsonClean
-    val jsonStringWithoutNullsPretty = jsonClean.loadJson(jsonStringWithoutNulls).pretty(Printer.spaces2)
-    assert(jsonClean.removeNullValues(jsonStringWithNulls) == jsonStringWithoutNullsPretty)
+    val jsonStringWithoutNullsPretty = JsonUtils.loadJson(jsonStringWithoutNulls).pretty(Printer.spaces2)
+    assert(JsonUtils.removeNullValues(jsonStringWithNulls) == jsonStringWithoutNullsPretty)
   }
 
   test("isCorrectJson true"){
-    val jsonClean = new JsonClean
-    assert(jsonClean.isCorrectJson(jsonStringWithoutNulls))
+    assert(JsonUtils.isCorrectJson(jsonStringWithoutNulls))
   }
 
   test("isCorrectJson false"){
-    val jsonClean = new JsonClean
-    assert(!jsonClean.isCorrectJson(notAJson))
+    assert(!JsonUtils.isCorrectJson(notAJson))
   }
 }

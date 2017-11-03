@@ -1,7 +1,7 @@
 import io.circe._
 import io.circe.parser._
 
-class JsonClean {
+object JsonUtils {
   def removeNullValues(jsonString: String): String = {
     loadJson(jsonString).pretty(Printer.spaces2.copy(dropNullValues = true))
   }
@@ -15,5 +15,9 @@ class JsonClean {
       case Right(json) => true
       case Left(failure) => false
     }
+  }
+
+  def prettifyJson(jsonString: String): String ={
+    loadJson(jsonString).pretty(Printer.spaces2)
   }
 }

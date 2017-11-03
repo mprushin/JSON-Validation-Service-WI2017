@@ -6,3 +6,4 @@ class JsonValidationSuite
   extends JsonValidationTest
     with JsonUtilsTest
     with JsonStorageTest
+    with EndpointsTest

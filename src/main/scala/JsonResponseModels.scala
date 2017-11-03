@@ -1,7 +1,3 @@
-import io.circe.{Decoder, Encoder, Printer}
-import io.circe.generic.semiauto._
-
-
 object JsonResponseModels {
   case class JsonOperationResponse(action: String, id: String, status: String, message: Option[String])
 

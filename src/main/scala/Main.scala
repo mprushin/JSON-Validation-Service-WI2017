@@ -11,12 +11,12 @@ object Main extends TwitterServer  {
     (schemaId: String) => Ok("SCHEMA GET - " + schemaId)
   }
 
-  val schemaPost: Endpoint[String] = post("schema" :: string) {
-    (schemaId: String) => Ok("SCHEMA POST - " + schemaId)
+  val schemaPost: Endpoint[String] = post("schema" :: string :: stringBody) {
+    (schemaId: String, jsonString: String) => Ok("SCHEMA POST - " + schemaId)
   }
 
-  val validatePost: Endpoint[String] = post("validate" :: string) {
-    (schemaId: String) => Ok("Validate Post - " + schemaId)
+  val validatePost: Endpoint[String] = post("validate" :: string :: stringBody) {
+    (schemaId: String, jsonString: String) => Ok("Validate Post - " + schemaId)
   }
 
   val api: Service[Request, Response] = (schemaGet :+: schemaPost :+: validatePost).toServiceAs[Text.Plain]

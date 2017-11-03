@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
 
   //Finch
   "com.github.finagle" %% "finch-core" % "0.16.0-M3",
+  "com.github.finagle" %% "finch-circe" % "0.16.0-M3",
   "com.twitter" %% "twitter-server" % "17.10.0",
 
   //Schema validator

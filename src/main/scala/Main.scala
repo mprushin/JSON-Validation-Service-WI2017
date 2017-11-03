@@ -1,3 +1,5 @@
+import java.io.FileNotFoundException
+
 import com.twitter.finagle.{Http, Service}
 import com.twitter.finagle.http.{Request, Response}
 import com.twitter.finagle.param.Stats
@@ -8,7 +10,13 @@ import io.finch._
 object Main extends TwitterServer  {
 
   val schemaGet: Endpoint[String] = get("schema" :: string) {
-    (schemaId: String) => Ok("SCHEMA GET - " + schemaId)
+    (schemaId: String) => {
+      val storage = new JsonStorage
+      storage.getSchema(schemaId) match {
+        case Some(schemaString) => Ok(schemaString)
+        case None => Ok("No such schema")
+      }
+    }
   }
 
   val schemaPost: Endpoint[String] = post("schema" :: string :: stringBody) {

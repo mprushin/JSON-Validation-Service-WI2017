@@ -6,6 +6,8 @@ scalaVersion := "2.12.4"
 
 val circeVersion = "0.9.0-M1"
 
+addCommandAlias("dist", ";clean;compile")
+
 libraryDependencies ++= Seq(
   //ScalaTest
   "org.scalactic" %% "scalactic" % "3.0.4",

@@ -1,3 +1,4 @@
+import io.circe.Json
 import org.scalatest.FunSuite
 
 trait JsonStorageTest extends FunSuite {
@@ -35,19 +36,19 @@ trait JsonStorageTest extends FunSuite {
       |    "required": ["source", "destination"]
       |  }
     """.stripMargin
-
+  val schema = JsonUtils.loadJson(schemaString)
 
   test("save and get json") {
-    JsonStorage.saveSchema(JsonUtils.prettifyJson(schemaString), "testSchemaId")
-    val schemaJsonStringLoaded = JsonStorage.getSchema("testSchemaId")
+    JsonStorage.saveSchema(schema, "testSchemaId")
+    val schemaJsonLoaded = JsonStorage.getSchema("testSchemaId")
 
-    assert(JsonUtils.prettifyJson(schemaJsonStringLoaded.getOrElse("")) == JsonUtils.prettifyJson(schemaString))
+    assert(schemaJsonLoaded.getOrElse(Json.Null) == schema)
   }
 
   test("load non-existent schema") {
-    val schemaJsonStringLoaded = JsonStorage.getSchema("nonExistentSchemaId")
+    val schemaJsonLoaded = JsonStorage.getSchema("nonExistentSchemaId")
 
-    assert(schemaJsonStringLoaded.isEmpty)
+    assert(schemaJsonLoaded.isEmpty)
   }
 
 }

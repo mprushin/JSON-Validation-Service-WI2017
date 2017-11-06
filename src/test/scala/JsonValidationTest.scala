@@ -36,6 +36,7 @@ trait JsonValidationTest extends FunSuite {
       |    "required": ["source", "destination"]
       |  }
     """.stripMargin
+  val schemaJson = JsonUtils.loadJson(schemaJsonString)
 
   val correctJsonString =
     """
@@ -47,6 +48,7 @@ trait JsonValidationTest extends FunSuite {
       |	}
       |}
     """.stripMargin
+  val correctJson = JsonUtils.loadJson(correctJsonString)
 
   val incorrectJsonString =
     """
@@ -56,17 +58,18 @@ trait JsonValidationTest extends FunSuite {
       |	}
       |}
     """.stripMargin
+  val incorrectJson = JsonUtils.loadJson(incorrectJsonString)
 
   test("validate success") {
-    assert(JsonValidation.validate(correctJsonString, schemaJsonString)._1)
+    assert(JsonValidation.validate(correctJson, schemaJson)._1)
   }
 
   test("validate error") {
-    assert(!JsonValidation.validate(incorrectJsonString, schemaJsonString)._1)
+    assert(!JsonValidation.validate(incorrectJson, schemaJson)._1)
   }
 
   test("validate error message") {
-    assert(!JsonValidation.validate(incorrectJsonString, schemaJsonString)._2.isEmpty)
+    assert(!JsonValidation.validate(incorrectJson, schemaJson)._2.isEmpty)
   }
 
 }

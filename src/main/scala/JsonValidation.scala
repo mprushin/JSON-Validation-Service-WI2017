@@ -1,9 +1,10 @@
 import java.util
-import scala.collection.JavaConverters._
 
+import scala.collection.JavaConverters._
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.fge.jsonschema.core.report.{ProcessingMessage, ProcessingReport}
 import com.github.fge.jsonschema.main.JsonSchemaFactory
+import io.circe.{Json, Printer}
 
 object JsonValidation {
 
@@ -13,15 +14,15 @@ object JsonValidation {
   /**
     * Validates json to schema
     *
-    * @param jsonString
-    * @param schemaString
+    * @param json
+    * @param schema
     * @return Pair of (successful flag, error message is unsuccesfull)
     */
-  def validate(jsonString: String, schemaString: String): (Boolean, String) = {
-    val json = objectMapper.readTree(jsonString)
-    val schemaJson = objectMapper.readTree(schemaString)
-    val schema = factory.getJsonSchema(schemaJson)
-    val report = schema.validate(json)
+  def validate(json: Json, schema: Json): (Boolean, String) = {
+    val jsonJson = objectMapper.readTree(json.pretty(Printer.noSpaces))
+    val schemaJson = objectMapper.readTree(schema.pretty(Printer.noSpaces))
+    val schemaObject = factory.getJsonSchema(schemaJson)
+    val report = schemaObject.validate(jsonJson)
     if (report.isSuccess) {
       (true, "")
     } else {

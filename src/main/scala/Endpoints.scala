@@ -6,7 +6,7 @@ object Endpoints {
   val schemaGet:Endpoint[Json] = get("schema" :: string) {
     (schemaId: String) => {
       JsonStorage.getSchema(schemaId) match {
-        case Some(schemaString) => Ok(JsonUtils.loadJson(schemaString))
+        case Some(schema) => Ok(schema)
         case None => Ok(JsonUtils.loadJson("No schema with id [%s]".format(schemaId)))
       }
     }
@@ -14,11 +14,11 @@ object Endpoints {
 
   val schemaPost: Endpoint[JsonOperationResponse] = post("schema" :: string :: stringBody) {
     (schemaId: String, jsonString: String) => {
-      if (!JsonUtils.isCorrectJson(jsonString)) {
+      if (!JsonUtils.isCorrectJsonString(jsonString)) {
         Ok(JsonResponseModels.uploadError)
       }
       else {
-        JsonStorage.saveSchema(jsonString, schemaId)
+        JsonStorage.saveSchema(JsonUtils.loadJson(jsonString), schemaId)
         Ok(JsonResponseModels.uploadedSuccessfully)
       }
     }
@@ -26,15 +26,16 @@ object Endpoints {
 
   val validatePost: Endpoint[JsonOperationResponse] = post("validate" :: string :: stringBody) {
     (schemaId: String, jsonString: String) => {
-      if (!JsonUtils.isCorrectJson(jsonString)) {
+      if (!JsonUtils.isCorrectJsonString(jsonString)) {
         Ok(JsonResponseModels.validateError("Uploaded string isn't a correct JSON"))
       }
       else {
         val jsonSchemaString = JsonStorage.getSchema(schemaId)
         JsonStorage.getSchema(schemaId) match {
           case Some(schemaString) => {
-            val jsonStringCleaned = JsonUtils.removeNullValues(jsonString)
-            val validationResult = JsonValidation.validate(jsonStringCleaned, schemaString)
+            val json = JsonUtils.loadJson(jsonString)
+            val jsonCleaned = JsonUtils.removeNullValues(json)
+            val validationResult = JsonValidation.validate(jsonCleaned, schemaString)
             if (validationResult._1) {
               Ok(JsonResponseModels.validatedSuccessfully)
             }

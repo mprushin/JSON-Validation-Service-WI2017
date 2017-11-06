@@ -14,6 +14,7 @@ trait JsonUtilsTest extends FunSuite {
       |	}
       |}
     """.stripMargin
+  val jsonWithNulls = JsonUtils.loadJson(jsonStringWithNulls)
 
   val jsonStringWithoutNulls =
     """{
@@ -24,19 +25,19 @@ trait JsonUtilsTest extends FunSuite {
       |	}
       |}
     """.stripMargin
+  val jsonWithoutNulls = JsonUtils.loadJson(jsonStringWithoutNulls)
 
   val notAJson = "dasdsadsadas"
 
   test("remove nulls") {
-    val jsonStringWithoutNullsPretty = JsonUtils.loadJson(jsonStringWithoutNulls).pretty(Printer.spaces2)
-    assert(JsonUtils.removeNullValues(jsonStringWithNulls) == jsonStringWithoutNullsPretty)
+    assert(JsonUtils.removeNullValues(jsonWithNulls) == jsonWithoutNulls)
   }
 
   test("isCorrectJson true"){
-    assert(JsonUtils.isCorrectJson(jsonStringWithoutNulls))
+    assert(JsonUtils.isCorrectJsonString(jsonStringWithoutNulls))
   }
 
   test("isCorrectJson false"){
-    assert(!JsonUtils.isCorrectJson(notAJson))
+    assert(!JsonUtils.isCorrectJsonString(notAJson))
   }
 }

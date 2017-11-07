@@ -1,7 +1,9 @@
 import JsonResponseModels.JsonOperationResponse
-import io.circe.Json
-import io.finch.{Endpoint, Ok, get, post, string, stringBody}
+import io.circe.generic.auto._
+import io.circe._
+import io.finch._
 import io.circe.parser._
+import io.circe.syntax._
 
 object Endpoints {
   val schemaGet: Endpoint[Json] = get("schema" :: string) {
@@ -17,10 +19,11 @@ object Endpoints {
     (schemaId: String, jsonString: String) => {
       if (parse(jsonString).isLeft) {
         Ok(JsonResponseModels.uploadError)
+        //BadRequest(new Exception(JsonResponseModels.uploadError.asJson.pretty(Printer.spaces2)))
       }
       else {
         JsonStorage.saveSchema(JsonUtils.loadJson(jsonString), schemaId)
-        Ok(JsonResponseModels.uploadedSuccessfully)
+        Created(JsonResponseModels.uploadedSuccessfully)
       }
     }
   }
@@ -29,6 +32,7 @@ object Endpoints {
     (schemaId: String, jsonString: String) => {
       if (parse(jsonString).isLeft) {
         Ok(JsonResponseModels.validateError("Uploaded string isn't a correct JSON"))
+        //BadRequest(new Exception(JsonResponseModels.validateError("Uploaded string isn't a correct JSON").asJson.pretty(Printer.spaces2)))
       }
       else {
         val jsonSchemaString = JsonStorage.getSchema(schemaId)
@@ -36,12 +40,18 @@ object Endpoints {
           case Some(schema) => {
             val json = JsonUtils.loadJson(jsonString)
             val jsonCleaned = JsonUtils.removeNullValues(json)
-              JsonValidation.validate(jsonCleaned, schema) match {
+            JsonValidation.validate(jsonCleaned, schema) match {
               case Right(flag) => Ok(JsonResponseModels.validatedSuccessfully)
-              case Left(message) => Ok(JsonResponseModels.validateError(message))
+              case Left(message) => {
+                Ok(JsonResponseModels.validateError(message))
+                //BadRequest(new Exception(JsonResponseModels.validateError(message).asJson.pretty(Printer.spaces2)))
+              }
             }
           }
-          case None => Ok(JsonResponseModels.validateError("No schema with id [%s] exists.".format(schemaId)))
+          case None => {
+            Ok(JsonResponseModels.validateError("No schema with id [%s] exists.".format(schemaId)))
+            //BadRequest(new Exception(JsonResponseModels.validateError("No schema with id [%s] exists.".format(schemaId)).asJson.pretty(Printer.spaces2)))
+          }
         }
       }
     }

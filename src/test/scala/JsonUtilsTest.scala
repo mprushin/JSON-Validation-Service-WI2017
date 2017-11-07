@@ -32,12 +32,4 @@ trait JsonUtilsTest extends FunSuite {
   test("remove nulls") {
     assert(JsonUtils.removeNullValues(jsonWithNulls) == jsonWithoutNulls)
   }
-
-  test("isCorrectJson true"){
-    assert(JsonUtils.isCorrectJsonString(jsonStringWithoutNulls))
-  }
-
-  test("isCorrectJson false"){
-    assert(!JsonUtils.isCorrectJsonString(notAJson))
-  }
 }

@@ -61,15 +61,15 @@ trait JsonValidationTest extends FunSuite {
   val incorrectJson = JsonUtils.loadJson(incorrectJsonString)
 
   test("validate success") {
-    assert(JsonValidation.validate(correctJson, schemaJson)._1)
+    assert(JsonValidation.validate(correctJson, schemaJson).isRight)
   }
 
   test("validate error") {
-    assert(!JsonValidation.validate(incorrectJson, schemaJson)._1)
+    assert(JsonValidation.validate(incorrectJson, schemaJson).isLeft)
   }
 
   test("validate error message") {
-    assert(!JsonValidation.validate(incorrectJson, schemaJson)._2.isEmpty)
+    assert(!JsonValidation.validate(incorrectJson, schemaJson).left.get.isEmpty)
   }
 
 }

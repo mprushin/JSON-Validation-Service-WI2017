@@ -18,20 +18,22 @@ object JsonValidation {
     * @param schema
     * @return Pair of (successful flag, error message is unsuccesfull)
     */
-  def validate(json: Json, schema: Json): (Boolean, String) = {
+  def validate(json: Json, schema: Json): Either[String, Boolean] = {
     val jsonJson = objectMapper.readTree(json.pretty(Printer.noSpaces))
     val schemaJson = objectMapper.readTree(schema.pretty(Printer.noSpaces))
     val schemaObject = factory.getJsonSchema(schemaJson)
     val report = schemaObject.validate(jsonJson)
+
     if (report.isSuccess) {
-      (true, "")
+      Right(true)
     } else {
-      (false, getMessage(report.iterator()))
+      Left(getMessage(report.iterator()))
     }
   }
 
   /**
     * Returns message from the validation outpur
+    *
     * @param iterator - Java.util.Iterator[ProcessingMessage]
     * @return - Message joined from the input iterator
     */

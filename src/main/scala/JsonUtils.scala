@@ -10,10 +10,4 @@ object JsonUtils {
     parse(jsonString).getOrElse(Json.Null)
   }
 
-  def isCorrectJsonString(jsonString: String): Boolean = {
-    parse(jsonString) match {
-      case Right(json) => true
-      case Left(failure) => false
-    }
-  }
 }

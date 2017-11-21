@@ -18,8 +18,8 @@ To build, run the following SBT command:
 Configuration
 =============
 
-Install H2 database \n
-Specify storage in /main/resources/application.conf (h2loc1)
+* Install H2 database
+* Specify storage in /main/resources/application.conf (h2loc1)
 
 Running
 =======

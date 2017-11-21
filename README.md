@@ -15,6 +15,12 @@ To build, run the following SBT command:
 
     $ sbt dist
 
+Configuration
+=============
+
+Install H2 database
+Specify storage in /main/resources/application.conf (h2loc1)
+
 Running
 =======
 

@@ -18,14 +18,14 @@ object JsonValidation {
     * @param schema
     * @return Pair of (successful flag, error message is unsuccesfull)
     */
-  def validate(json: Json, schema: Json): Either[String, Boolean] = {
+  def validate(json: Json, schema: Json): Either[String, Json] = {
     val jsonJson = objectMapper.readTree(json.pretty(Printer.noSpaces))
     val schemaJson = objectMapper.readTree(schema.pretty(Printer.noSpaces))
     val schemaObject = factory.getJsonSchema(schemaJson)
     val report = schemaObject.validate(jsonJson)
 
     if (report.isSuccess) {
-      Right(true)
+      Right(json)
     } else {
       Left(getMessage(report.iterator()))
     }

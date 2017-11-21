@@ -41,7 +41,7 @@ object Endpoints {
             val json = JsonUtils.loadJson(jsonString)
             val jsonCleaned = JsonUtils.removeNullValues(json)
             JsonValidation.validate(jsonCleaned, schema) match {
-              case Right(flag) => Ok(JsonResponseModels.validatedSuccessfully)
+              case Right(json) => Ok(JsonResponseModels.validatedSuccessfully)
               case Left(message) => {
                 Ok(JsonResponseModels.validateError(message))
                 //BadRequest(new Exception(JsonResponseModels.validateError(message).asJson.pretty(Printer.spaces2)))

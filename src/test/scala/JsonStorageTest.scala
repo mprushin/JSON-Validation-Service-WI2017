@@ -37,16 +37,17 @@ trait JsonStorageTest extends FunSuite {
       |  }
     """.stripMargin
   val schema = JsonUtils.loadJson(schemaString)
+  object JsonTestStorage extends JsonStorage("h2test1")
 
   test("save and get json") {
-    JsonStorage.saveSchema(schema, "testSchemaId")
-    val schemaJsonLoaded = JsonStorage.getSchema("testSchemaId")
+    JsonTestStorage.saveSchema(schema, "testSchemaId")
+    val schemaJsonLoaded = JsonTestStorage.getSchema("testSchemaId")
 
     assert(schemaJsonLoaded.getOrElse(Json.Null) == schema)
   }
 
   test("load non-existent schema") {
-    val schemaJsonLoaded = JsonStorage.getSchema("nonExistentSchemaId")
+    val schemaJsonLoaded = JsonTestStorage.getSchema("nonExistentSchemaId")
 
     assert(schemaJsonLoaded.isEmpty)
   }

@@ -77,10 +77,10 @@ trait EndpointsTest extends FunSuite {
   }
 
   test("post schema and verify unsuccessfully") {
-    val postRequest = Input.post("/schema/endpointTest2").withBody[Application.Json](JsonUtils.loadJson(schemaStringEndpoints))
+    val postRequest = Input.post("/schema/endpointTest3").withBody[Application.Json](JsonUtils.loadJson(schemaStringEndpoints))
     assert(Endpoints.schemaPost(postRequest).awaitValueUnsafe().getOrElse(null) == JsonResponseModels.uploadedSuccessfully)
 
-    val verifyRequest = Input.post("/validate/endpointTest2").withBody[Application.Json](JsonUtils.loadJson(jsonStringEndpointsInvalid))
+    val verifyRequest = Input.post("/validate/endpointTest3").withBody[Application.Json](JsonUtils.loadJson(jsonStringEndpointsInvalid))
     assert(Endpoints.validatePost(verifyRequest).awaitValueUnsafe().getOrElse(null) == JsonResponseModels.validateError("object has missing required properties ([\"destination\",\"source\"])"))
   }
 
